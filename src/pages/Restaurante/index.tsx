@@ -3,17 +3,13 @@ import ListaPratos from '../../components/ListaPratos'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-export type Prato = {
+export type PratosAPI = {
   foto: string
   preco: number
   id: number
   nome: string
   descricao: string
   porcao: string
-}
-
-export type PratosAPI = {
-  cardapio?: Prato[]
 }
 
 const Pratos = () => {
@@ -24,12 +20,11 @@ const Pratos = () => {
   useEffect(() => {
     fetch(`https://fake-api-tau.vercel.app/api/efood/restaurantes/${id}`)
       .then((res) => res.json())
-      .then((res) => setLista(res))
+      .then((res) => setLista(res[0]?.cardapio || []))
+      .catch((error) => {
+        console.error('Erro na chamada da API:', error)
+      })
   }, [id])
-
-  // if (!lista) {
-  //   return <h3>Carregando...</h3>
-  // }
 
   return (
     <>
